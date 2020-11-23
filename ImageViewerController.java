@@ -3,14 +3,20 @@ import java.util.Map;
 import java.util.Optional;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import javafx.scene.layout.Pane;
+
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.layout.VBox;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -49,10 +55,12 @@ public class ImageViewerController {
 	imageView.fitWidthProperty().bind(imageViewPane.widthProperty());
 	imageView.fitHeightProperty().bind(imageViewPane.heightProperty());
 
+	listView.setCellFactory((imageView) -> new ImageTextCell());
+
 	listView.getSelectionModel()
 	        .selectedItemProperty()
 	        .addListener((obValue, oldPhoto, newPhoto) 
-	                    -> { 
+	                      -> { 
 			           final Image image = Optional.<Image>ofNullable(mapOfImages.get(newPhoto.title()))
 			                                       .orElse(new Image(newPhoto.location()));
 			           mapOfImages.putIfAbsent(newPhoto.title(), image);
@@ -60,6 +68,43 @@ public class ImageViewerController {
 	                           imageView.setImage(image);
 			        }
 	                    );
+    }
+    
+    private class ImageTextCell extends ListCell<Photo>{
+        private VBox vbox            = new VBox(8.0);
+	private Label label          = new Label();
+	private ImageView thumbImageView = new ImageView();
+        
+	{
+	    thumbImageView.setFitHeight(100.0);
+	    thumbImageView.setPreserveRatio(true);
+
+            label.setWrapText(true);
+	    label.setTextAlignment(TextAlignment.CENTER);
+	    label.setLableFor(thumbImageView);
+
+	    vbox.setAlignment(Pos.CENTER);
+	    vbox.getChildren().addAll(thumbImageView, label);
+
+	}
+
+        
+
+	@Override
+	protected void updateItem(final Photo photo, final boolean empty){
+            super.updateItem(photo, empty);
+	    
+	    if(empty || photo == null) { 
+	        setGraphic(null); 
+		return;
+	    }
+
+	    label.setText(photo.title());
+	    thumbImageView.setImage(new Image(photo.location())); 
+	    
+	    setGraphic(vbox);
+
+	}
     }
 
 }
