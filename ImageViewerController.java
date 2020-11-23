@@ -5,13 +5,13 @@ import java.util.Optional;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
 
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -81,10 +81,12 @@ public class ImageViewerController {
 
             label.setWrapText(true);
 	    label.setTextAlignment(TextAlignment.CENTER);
-	    label.setLableFor(thumbImageView);
+	    label.setLabelFor(thumbImageView);
+	    label.underlineProperty().setValue(true);
 
 	    vbox.setAlignment(Pos.CENTER);
 	    vbox.getChildren().addAll(thumbImageView, label);
+	    vbox.cursorProperty().setValue(Cursor.HAND);
 
 	}
 
