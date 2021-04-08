@@ -41,72 +41,73 @@ public class ImageViewerController {
     public void initialize(){
 
         listOfPhotos = FXCollections.observableArrayList();
-	listOfPhotos.add(new Photo("images/ganesh-bhagwan.jpeg",         "Ganesh Bhagwan"           ));
-	listOfPhotos.add(new Photo("images/hanumanji-paanch-sir.jpg",    "Panchmukhi Hanuman Jee"   ));
-	listOfPhotos.add(new Photo("images/ramjee-hanumanjee.jpg",       "Ramjee Hanumar Jee"       ));  
-	listOfPhotos.add(new Photo("images/shivjee-with-family_2.jpg",   "Shivjee With Family 1"    ));
-	listOfPhotos.add(new Photo("images/shivjee-with-family.jpg",     "ShivJee With Family 2"    )); 
-	listOfPhotos.add(new Photo("images/vishnuroop.jpeg",             "Brihad Vishnuroop"        ));
+	    listOfPhotos.add(new Photo("images/ganesh-bhagwan.jpeg",         "Ganesh Bhagwan"           ));
+	    listOfPhotos.add(new Photo("images/hanumanji-paanch-sir.jpg",    "Panchmukhi Hanuman Jee"   ));
+	    listOfPhotos.add(new Photo("images/ramjee-hanumanjee.jpg",       "Ramjee Hanumar Jee"       ));  
+	    listOfPhotos.add(new Photo("images/shivjee-with-family_2.jpg",   "Shivjee With Family 1"    ));
+	    listOfPhotos.add(new Photo("images/shivjee-with-family.jpg",     "ShivJee With Family 2"    )); 
+	    listOfPhotos.add(new Photo("images/vishnuroop.jpeg",             "Brihad Vishnuroop"        ));
         
-	listView.setItems(listOfPhotos);
+	    listView.setItems(listOfPhotos);
 
         mapOfImages  = new HashMap<>(listOfPhotos.size());
 
-	imageView.fitWidthProperty().bind(imageViewPane.widthProperty());
-	imageView.fitHeightProperty().bind(imageViewPane.heightProperty());
+	    imageView.fitWidthProperty().bind(imageViewPane.widthProperty());
+	    imageView.fitHeightProperty().bind(imageViewPane.heightProperty());
 
-	listView.setCellFactory((imageView) -> new ImageTextCell());
+	    listView.setCellFactory((imageView) -> new ImageTextCell());
 
-	listView.getSelectionModel()
+	    listView.getSelectionModel()
 	        .selectedItemProperty()
 	        .addListener((obValue, oldPhoto, newPhoto) 
 	                      -> { 
-			           final Image image = Optional.<Image>ofNullable(mapOfImages.get(newPhoto.title()))
+			                   final Image image = Optional.<Image>ofNullable(mapOfImages.get(newPhoto.title()))
 			                                       .orElse(new Image(newPhoto.location()));
-			           mapOfImages.putIfAbsent(newPhoto.title(), image);
-				   ImageViewer.stage.setTitle(newPhoto.title());
+			                   mapOfImages.putIfAbsent(newPhoto.title(), image);
+				               ImageViewer.setStageTitle(newPhoto.title());
 	                           imageView.setImage(image);
 			        }
 	                    );
     }
     
     private class ImageTextCell extends ListCell<Photo>{
-        private VBox vbox            = new VBox(8.0);
-	private Label label          = new Label();
-	private ImageView thumbImageView = new ImageView();
+        private VBox      vbox           = new VBox(8.0);
+	    private Label     label          = new Label();
+	    private ImageView thumbImageView = new ImageView();
         
-	{
-	    thumbImageView.setFitHeight(100.0);
-	    thumbImageView.setPreserveRatio(true);
+        //init block
+	    {
+	        thumbImageView.setFitHeight(100.0);
+	        thumbImageView.setPreserveRatio(true);
 
             label.setWrapText(true);
-	    label.setTextAlignment(TextAlignment.CENTER);
-	    label.setLabelFor(thumbImageView);
-	    label.underlineProperty().setValue(true);
+	        label.setTextAlignment(TextAlignment.CENTER);
+	        label.setLabelFor(thumbImageView);
+	        label.underlineProperty().setValue(true);
 
-	    vbox.setAlignment(Pos.CENTER);
-	    vbox.getChildren().addAll(thumbImageView, label);
-	    vbox.cursorProperty().setValue(Cursor.HAND);
+	        vbox.setAlignment(Pos.CENTER);
+	        vbox.getChildren().addAll(thumbImageView, label);
+	        vbox.cursorProperty().setValue(Cursor.HAND);
 
-	}
+	    }
 
         
 
-	@Override
-	protected void updateItem(final Photo photo, final boolean empty){
-            super.updateItem(photo, empty);
-	    
-	    if(empty || photo == null) { 
-	        setGraphic(null); 
-		return;
+	    @Override
+	    protected void updateItem(final Photo photo, final boolean empty){
+             super.updateItem(photo, empty);
+	        
+	        if(empty || photo == null) { 
+	            setGraphic(null); 
+	    	    return;
+	        }
+
+	        label.setText(photo.title());
+	        thumbImageView.setImage(new Image(photo.location())); 
+	        
+	        setGraphic(vbox);
+
 	    }
-
-	    label.setText(photo.title());
-	    thumbImageView.setImage(new Image(photo.location())); 
-	    
-	    setGraphic(vbox);
-
-	}
     }
 
 }
